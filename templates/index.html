@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f8ff; /* Light Blue */
+            color: #004080; /* Dark Blue */
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #007BFF; /* Blue border */
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            cursor: pointer;
+            background-color: #007BFF; /* Dark Blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker Blue on hover */
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔍 Phishing Detection System</h1>
+    <p>Enter a URL to check if it is **legitimate** or a **phishing attempt**.</p>
+    
+    <input type="text" id="urlInput" placeholder="https://example.com">
+    <button onclick="checkURL()">🔍 Verify</button>
+
+    <p id="result"></p>
+
+    <script>
+        function checkURL() {
+            let url = document.getElementById("urlInput").value;
+
+            fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ "url": url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultElement = document.getElementById("result");
+                if (data.prediction === "Phishing") {
+                    resultElement.innerText = "🚨 Phishing Detected!";
+                    resultElement.style.color = "red";
+                } else {
+                    resultElement.innerText = "✅ Legitimate Website";
+                    resultElement.style.color = "green";
+                }
+            })
+            .catch(error => {
+                document.getElementById("result").innerText = "⚠️ Error: Could not check URL";
+                document.getElementById("result").style.color = "orange";
+                console.error(error);
+            });
+        }
+    </script>
+
+</body>
+</html>
